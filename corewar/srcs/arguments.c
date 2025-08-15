@@ -45,6 +45,10 @@ bool parse_arguments(int argc, char **argv, arguments_t *args) {
 		fprintf(stderr, "Error: No champions provided.\n");
 		return false;
 	}
+	if (args->number_of_champions > CHAMP_MAX_COUNT) {
+		fprintf(stderr, "Error: Too many champions provided. Maximum is %d.\n", CHAMP_MAX_COUNT);
+		return false;
+	}
 
 	args->champions = malloc(args->number_of_champions * sizeof(champion_t));
 	if (!args->champions) {

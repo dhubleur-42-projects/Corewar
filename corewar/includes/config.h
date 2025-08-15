@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 # define CONFIG_H
 
+extern const int CHAMP_MAX_COUNT;
 extern const int REG_NUMBER;
 extern const int REG_SIZE;
 extern const int CYCLE_TO_DIE;

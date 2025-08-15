@@ -1,10 +1,12 @@
 #ifndef ARGUMENTS_H
 # define ARGUMENTS_H
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+
+# include "config.h"
 
 typedef struct {
 	int number;

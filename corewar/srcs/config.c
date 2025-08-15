@@ -1,5 +1,8 @@
 #include "config.h"
 
+// Maximum number of champions that can be loaded
+const int CHAMP_MAX_COUNT = 4;
+
 // Number of registers each process can use (in addition to the PC)
 const int REG_NUMBER = 16;
 
