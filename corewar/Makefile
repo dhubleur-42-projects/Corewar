@@ -2,6 +2,7 @@ NAME		=	corewar
 
 SRCS		= 	\
 				main.c \
+				config.c
 
 _OBJS		=	${SRCS:.c=.o}
 OBJS		=	$(addprefix build/, $(_OBJS))
