@@ -28,10 +28,10 @@ build/%.o	:	srcs/%.c
 	fi
 	$(CC) ${CFLAGS} -MMD -MF $(@:.o=.d) ${INCLUDE} -c $< -o $@
 
-libft:
+$(LIBFT): FORCE
 	@make -C $(LIBFT_FOLDER)
 
-$(NAME)	:	$(OBJS) libft
+$(NAME)	:	$(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 
 -include $(OBJS_DEPEND)
@@ -45,4 +45,6 @@ fclean	:	clean
 re		:	fclean
 			make ${NAME}
 
-.PHONY	:	all clean fclean re
+FORCE:
+
+.PHONY	:	all clean fclean re FORCE
