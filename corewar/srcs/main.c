@@ -29,6 +29,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	dump_memory(&vm, 1);
+
 	free_arguments(&args);
 	return 0;
 }

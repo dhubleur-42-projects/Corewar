@@ -6,6 +6,7 @@ SRCS		= 	\
 				arguments.c \
 				$(addprefix virtualmachine/, \
 					init.c \
+					dump.c \
 				)
 
 LIBFT_FOLDER	=	../libft
