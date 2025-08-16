@@ -5,13 +5,16 @@ SRCS		= 	\
 				config.c \
 				arguments.c
 
+LIBFT_FOLDER	=	../libft
+LIBFT		=	$(LIBFT_FOLDER)/libft.a
+
 _OBJS		=	${SRCS:.c=.o}
 OBJS		=	$(addprefix build/, $(_OBJS))
 OBJS_DEPEND	=	${OBJS:.o=.d}
 
 CC			=	clang
 CFLAGS		=	-Wall -Wextra -Werror
-INCLUDE		=	-I includes/
+INCLUDE		=	-I includes/ -I $(LIBFT_FOLDER)
 
 all		:	$(NAME)
 
@@ -21,8 +24,11 @@ build/%.o	:	srcs/%.c
 	fi
 	$(CC) ${CFLAGS} -MMD -MF $(@:.o=.d) ${INCLUDE} -c $< -o $@
 
-$(NAME)	:	$(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+libft:
+	@make -C $(LIBFT_FOLDER)
+
+$(NAME)	:	$(OBJS) libft
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 
 -include $(OBJS_DEPEND)
 
