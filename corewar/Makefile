@@ -3,7 +3,10 @@ NAME		=	corewar
 SRCS		= 	\
 				main.c \
 				config.c \
-				arguments.c
+				arguments.c \
+				$(addprefix virtualmachine/, \
+					init.c \
+				)
 
 LIBFT_FOLDER	=	../libft
 LIBFT		=	$(LIBFT_FOLDER)/libft.a

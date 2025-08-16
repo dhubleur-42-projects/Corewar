@@ -22,7 +22,7 @@ const int NBR_LIVE = 10;
 const int CYCLE_DELTA = 5;
 
 // Size of the memory in octets
-const int MEM_SIZE = 4096;
+const size_t MEM_SIZE = 4096;
 
 // Maximum size of each champion
-const int CHAMP_MAX_SIZE = MEM_SIZE / 6;
+const size_t CHAMP_MAX_SIZE = MEM_SIZE / 6;
