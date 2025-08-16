@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
 	dump_memory(&vm, 1);
 
+	free_virtualmachine(&vm);
 	free_arguments(&args);
 	return 0;
 }
