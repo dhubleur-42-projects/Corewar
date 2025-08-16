@@ -51,7 +51,7 @@ bool parse_arguments(int argc, char **argv, arguments_t *args) {
 	}
 
 	args->champions = malloc(args->number_of_champions * sizeof(champion_t));
-	if (!args->champions) {
+	if (args->champions == NULL) {
 		ft_dprintf(2,"Error: Memory allocation failed.\n");
 		return false;
 	}
