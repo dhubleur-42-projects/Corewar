@@ -73,6 +73,10 @@ bool parse_arguments(int argc, char **argv, arguments_t *args) {
 			}
 
 			if (ft_strcmp(argv[i], "-dump") == 0) {
+				if (args->dump_cycle != -1) {
+					ft_dprintf(2,"Error: -dump option already specified.\n");
+					return false;
+				}
 				state = DUMP;
 			} else if (ft_strcmp(argv[i], "-n") == 0) {
 				state = NUMBER;
@@ -124,5 +128,12 @@ bool parse_arguments(int argc, char **argv, arguments_t *args) {
 			}
 		}
 	}
+
+	if (state != CHAMPION) {
+		// If we finished parsing and we are not in CHAMPION state, the last argument was an option
+		ft_dprintf(2,"Error: Option %s needs an argument.\n", argv[argc - 1]);
+		return false;
+	}
+
 	return true;
 }
