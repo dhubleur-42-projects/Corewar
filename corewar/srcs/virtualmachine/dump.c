@@ -52,3 +52,19 @@ void dump_memory(const virtualmachine_t *vm, int fd) {
 		}
 	}
 }
+
+void dump_processes(const virtualmachine_t *vm, int fd) {
+	t_list *processes = vm->processes;
+	while (processes != NULL) {
+		process_t *process = (process_t *)processes->content;
+		ft_dprintf(fd, "Process %d: PC=0x%s%x, Carry=%d Registers:\n", process->id, get_hexa_zero_padding(process->pc, 4), process->pc, process->carry);
+		for (int i = 0; i < REG_NUMBER; i++) {
+			ft_dprintf(fd, "  R%d: ", i + 1);
+			for (int j = 0; j < REG_SIZE; j++) {
+				ft_dprintf(fd, "0x%s%x ", get_hexa_zero_padding(process->regs[i][j], 2), process->regs[i][j]);
+			}
+			ft_dprintf(fd, "\n");
+		}
+		processes = processes->next;
+	}
+}

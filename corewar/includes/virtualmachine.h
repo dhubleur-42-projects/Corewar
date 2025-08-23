@@ -37,5 +37,6 @@ bool init_virtualmachine(virtualmachine_t *vm);
 bool load_champions(virtualmachine_t *vm, arguments_t *args);
 void free_virtualmachine(virtualmachine_t *vm);
 void dump_memory(const virtualmachine_t *vm, int fd);
+void dump_processes(const virtualmachine_t *vm, int fd);
 
 #endif
