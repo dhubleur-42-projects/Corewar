@@ -10,7 +10,7 @@
 
 typedef struct {
 	int address;
-	int owner;
+	int writer;
 	uint8_t value;
 } cell_t;
 

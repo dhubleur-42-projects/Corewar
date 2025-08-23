@@ -28,7 +28,7 @@ bool init_virtualmachine(virtualmachine_t *vm) {
 
 	for (size_t i = 0; i < MEM_SIZE; i++) {
 		vm->memory->cells[i].address = i;
-		vm->memory->cells[i].owner = -1;
+		vm->memory->cells[i].writer = -1;
 		vm->memory->cells[i].value = 0;
 	}
 
@@ -71,7 +71,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 
 		for (size_t j = 0; j < bytes_read; j++) {
 			vm->memory->cells[start_address + j].value = buffer[j];
-			vm->memory->cells[start_address + j].owner = champion->number;
+			vm->memory->cells[start_address + j].writer = champion->number;
 		}
 	}
 	return true;

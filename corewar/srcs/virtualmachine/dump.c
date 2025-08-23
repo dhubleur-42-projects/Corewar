@@ -1,11 +1,11 @@
 #include "virtualmachine.h"
 
-#define COLOR(owner) \
-	((owner) == -1 ? RESET : \
-	((owner) == 1 ? GREEN : \
-	((owner) == 2 ? BLUE : \
-	((owner) == 3 ? YELLOW : \
-	((owner) == 4 ? RED : \
+#define COLOR(writer) \
+	((writer) == -1 ? RESET : \
+	((writer) == 1 ? GREEN : \
+	((writer) == 2 ? BLUE : \
+	((writer) == 3 ? YELLOW : \
+	((writer) == 4 ? RED : \
 	(RESET))))))
 
 int hex_len(unsigned int v) {
@@ -41,7 +41,7 @@ void dump_memory(const virtualmachine_t *vm, int fd) {
 				i);
 		}
 		ft_dprintf(fd, "%s%s%x%s", 
-			COLOR(vm->memory->cells[i].owner),
+			COLOR(vm->memory->cells[i].writer),
 			get_hexa_zero_padding(vm->memory->cells[i].value, 2),
 			vm->memory->cells[i].value,
 			RESET);
