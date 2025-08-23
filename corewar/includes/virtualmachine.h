@@ -20,8 +20,17 @@ typedef struct {
 } memory_t;
 
 typedef struct {
+	int id;
+	int owner;
+	size_t pc;
+	uint8_t **regs;
+	int carry;
+} process_t;
+
+typedef struct {
 	int cycle;
 	memory_t *memory;
+	t_list *processes;
 } virtualmachine_t;
 
 bool init_virtualmachine(virtualmachine_t *vm);

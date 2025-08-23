@@ -31,6 +31,20 @@ int main(int argc, char **argv)
 
 	dump_memory(&vm, 1);
 
+	t_list *processes = vm.processes;
+	while (processes != NULL) {
+		process_t *process = (process_t *)processes->content;
+		ft_dprintf(1, "Process %d: PC=0x%x, Carry=%d Registers:\n", process->id, process->pc, process->carry);
+		for (int i = 0; i < REG_NUMBER; i++) {
+			ft_dprintf(1, "  R%d: ", i + 1);
+			for (int j = 0; j < REG_SIZE; j++) {
+				ft_dprintf(1, "0x%x ", process->regs[i][j]);
+			}
+			ft_dprintf(1, "\n");
+		}
+		processes = processes->next;
+	}
+
 	free_virtualmachine(&vm);
 	free_arguments(&args);
 	return 0;
