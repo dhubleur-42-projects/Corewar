@@ -104,6 +104,10 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 			ft_dprintf(2, "Error: Champion file %s is too large (max size is %d bytes).\n", champion_arg->filename, CHAMP_MAX_SIZE);
 			return false;
 		}
+		if (sizeof(champion_header_t) + header->prog_size > bytes_read) {
+			ft_dprintf(2, "Error: Champion file %s is truncated.\n", champion_arg->filename);
+			return false;
+		}
 		champion->number = champion_arg->number;
 		ft_strcpy(champion->name, header->prog_name);
 
