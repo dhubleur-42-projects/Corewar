@@ -87,7 +87,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 			ft_dprintf(2, "Error: Could not read champion file %s.\n", champion_arg->filename);
 			return false;
 		}
-		if (bytes_read < sizeof(champion_header_t) + 1) {
+		if (bytes_read < sizeof(champion_header_t)) {
 			ft_dprintf(2, "Error: Champion file %s is too small.\n", champion_arg->filename);
 			return false;
 		}
@@ -112,11 +112,11 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 		ft_strcpy(champion->name, header->prog_name);
 
 		int start_address = i * space_between_entries;
-		size_t i = 0;
+		size_t idx = 0;
 		for (size_t j = sizeof(champion_header_t); j < sizeof(champion_header_t) + header->prog_size; j++) {
-			vm->memory->cells[start_address + i].value = buffer[j];
-			vm->memory->cells[start_address + i].writer = champion_arg->number;
-			i++;
+			vm->memory->cells[start_address + idx].value = buffer[j];
+			vm->memory->cells[start_address + idx].writer = champion_arg->number;
+			idx++;
 		}
 
 		process_t *process = malloc(sizeof(process_t));
