@@ -14,6 +14,9 @@ void free_process(void *ptr) {
 }
 
 void free_virtualmachine(virtualmachine_t *vm) {
+	if (vm->champions != NULL) {
+		free(vm->champions);
+	}
 	if (vm->memory != NULL) {
 		if (vm->memory->cells != NULL) {
 			free(vm->memory->cells);
@@ -26,6 +29,7 @@ void free_virtualmachine(virtualmachine_t *vm) {
 }
 
 bool init_virtualmachine(virtualmachine_t *vm) {
+	vm->champions = NULL;
 	vm->cycle = 0;
 	vm->memory = NULL;
 	vm->processes = NULL;
@@ -56,42 +60,59 @@ bool init_virtualmachine(virtualmachine_t *vm) {
 }
 
 bool load_champions(virtualmachine_t *vm, arguments_t *args) {
+	vm->number_of_champions = args->number_of_champions;
+	vm->champions = malloc(args->number_of_champions * sizeof(champion_t));
+	if (vm->champions == NULL) {
+		ft_dprintf(2, "Error: Memory allocation failed.\n");
+		return false;
+	}
+
 	int space_between_entries = MEM_SIZE / args->number_of_champions;
 	for (int i = 0; i < args->number_of_champions; i++) {
-		champion_t *champion = &args->champions[i];
+		champion_argument_t *champion_arg = &args->champions[i];
+		champion_t *champion = &vm->champions[i];
 
-		int fd = open(champion->filename, O_RDONLY);
+		int fd = open(champion_arg->filename, O_RDONLY);
 		if (fd < 0) {
-			ft_dprintf(2, "Error: Could not open champion file %s.\n", champion->filename);
+			ft_dprintf(2, "Error: Could not open champion file %s.\n", champion_arg->filename);
 			return false;
 		}
 
-		uint8_t buffer[CHAMP_MAX_SIZE];
-		size_t bytes_read = read(fd, buffer, CHAMP_MAX_SIZE);
+		size_t read_size = CHAMP_MAX_SIZE + sizeof(champion_header_t);
+
+		uint8_t buffer[read_size];
+		size_t bytes_read = read(fd, buffer, read_size);
 		close(fd);
 		if (bytes_read < 0) {
-			ft_dprintf(2, "Error: Could not read champion file %s.\n", champion->filename);
+			ft_dprintf(2, "Error: Could not read champion file %s.\n", champion_arg->filename);
 			return false;
 		}
-		if (bytes_read == 0) {
-			ft_dprintf(2, "Error: Champion file %s is empty.\n", champion->filename);
+		if (bytes_read < sizeof(champion_header_t) + 1) {
+			ft_dprintf(2, "Error: Champion file %s is too small.\n", champion_arg->filename);
 			return false;
 		}
-		if (bytes_read > CHAMP_MAX_SIZE) {
-			ft_dprintf(2, "Error: Champion file %s is too large.\n", champion->filename);
+
+		champion_header_t *header = (champion_header_t *)buffer;
+		header->magic = big_to_little_endian(header->magic);
+		header->prog_size = big_to_little_endian(header->prog_size);
+
+		if (header->magic != COREWAR_EXEC_MAGIC) {
+			ft_dprintf(2, "Error: Champion file %s is invalid.\n", champion_arg->filename);
 			return false;
 		}
+		if (header->prog_size > CHAMP_MAX_SIZE) {
+			ft_dprintf(2, "Error: Champion file %s is too large (max size is %d bytes).\n", champion_arg->filename, CHAMP_MAX_SIZE);
+			return false;
+		}
+		champion->number = champion_arg->number;
+		ft_strcpy(champion->name, header->prog_name);
 
 		int start_address = i * space_between_entries;
-
-		if (start_address + bytes_read > MEM_SIZE) {
-			ft_dprintf(2, "Error: Champion %s exceeds memory bounds.\n", champion->filename);
-			return false;
-		}
-
-		for (size_t j = 0; j < bytes_read; j++) {
-			vm->memory->cells[start_address + j].value = buffer[j];
-			vm->memory->cells[start_address + j].writer = champion->number;
+		size_t i = 0;
+		for (size_t j = sizeof(champion_header_t); j < sizeof(champion_header_t) + header->prog_size; j++) {
+			vm->memory->cells[start_address + i].value = buffer[j];
+			vm->memory->cells[start_address + i].writer = champion_arg->number;
+			i++;
 		}
 
 		process_t *process = malloc(sizeof(process_t));
@@ -100,8 +121,8 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 			return false;
 		}
 
-		process->id = champion->number;
-		process->owner = champion->number;
+		process->id = champion_arg->number;
+		process->owner = champion_arg->number;
 		process->pc = start_address;
 		process->carry = 0;
 		process->regs = malloc(REG_NUMBER * sizeof(uint8_t *));
@@ -122,7 +143,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 				return false;
 			}
 			if (j == 0) {
-				process->regs[j][REG_SIZE - 1] = champion->number;
+				process->regs[j][REG_SIZE - 1] = champion_arg->number;
 			}
 		}
 

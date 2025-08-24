@@ -4,6 +4,7 @@ SRCS		= 	\
 				main.c \
 				config.c \
 				arguments.c \
+				utils.c \
 				$(addprefix virtualmachine/, \
 					init.c \
 					dump.c \

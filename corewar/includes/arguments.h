@@ -9,12 +9,12 @@
 typedef struct {
 	int number;
 	char *filename;
-} champion_t;
+} champion_argument_t;
 
 typedef struct {
 	int dump_cycle;
 	int number_of_champions;
-	champion_t *champions;
+	champion_argument_t *champions;
 } arguments_t;
 
 typedef enum {

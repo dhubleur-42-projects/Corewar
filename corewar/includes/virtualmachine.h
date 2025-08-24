@@ -7,6 +7,8 @@
 # include "arguments.h"
 # include "config.h"
 # include "colors.h"
+# include "champion.h"
+# include "utils.h"
 
 typedef struct {
 	int address;
@@ -28,6 +30,8 @@ typedef struct {
 } process_t;
 
 typedef struct {
+	int number_of_champions;
+	champion_t *champions;
 	int cycle;
 	memory_t *memory;
 	t_list *processes;
