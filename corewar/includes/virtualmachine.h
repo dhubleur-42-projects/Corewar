@@ -34,7 +34,7 @@ typedef struct {
 	champion_t *champions;
 	int cycle;
 	memory_t *memory;
-	t_list *processes;
+	list_t *processes;
 	int cycle_to_die;
 	int last_check_cycle;
 	int checks_since_decrease;

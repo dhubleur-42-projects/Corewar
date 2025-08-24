@@ -54,7 +54,7 @@ void dump_memory(const virtualmachine_t *vm, int fd) {
 }
 
 void dump_processes(const virtualmachine_t *vm, int fd) {
-	t_list *processes = vm->processes;
+	list_t *processes = vm->processes;
 	while (processes != NULL) {
 		process_t *process = (process_t *)processes->content;
 		champion_t *champion = NULL;
