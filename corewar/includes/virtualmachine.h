@@ -31,6 +31,9 @@ typedef struct {
 	int cycle;
 	memory_t *memory;
 	t_list *processes;
+	int cycle_to_die;
+	int last_check_cycle;
+	int checks_since_decrease;
 } virtualmachine_t;
 
 bool init_virtualmachine(virtualmachine_t *vm);

@@ -29,6 +29,9 @@ bool init_virtualmachine(virtualmachine_t *vm) {
 	vm->cycle = 0;
 	vm->memory = NULL;
 	vm->processes = NULL;
+	vm->cycle_to_die = CYCLE_TO_DIE;
+	vm->last_check_cycle = 0;
+	vm->checks_since_decrease = 0;
 
 	vm->memory = malloc(sizeof(memory_t));
 	if (vm->memory == NULL) {
