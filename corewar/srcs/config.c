@@ -10,19 +10,22 @@ const int REG_NUMBER = 16;
 const int REG_SIZE = 4;
 
 // Each process has to execute at least a live instruction every CYCLE_TO_DIE cycles
-const int CYCLE_TO_DIE = 42;
+const int CYCLE_TO_DIE = 1536;
 
 // Decrease CYCLE_TO_DIE if it was not decreased for this checks
 const int MAX_CHECKS = 10;
 
 // Numer of live instructions in a cycle to trigger a decrease of CYCLE_TO_DIE
-const int NBR_LIVE = 10;
+const int NBR_LIVE = 21;
 
 // Reduce CYCLE_TO_DIE by CYCLE_DELTA when decreasing
-const int CYCLE_DELTA = 5;
+const int CYCLE_DELTA = 50;
 
 // Size of the memory in octets
 const size_t MEM_SIZE = 4096;
+
+// Size of the index mode in octets
+const size_t IDX_MODE = MEM_SIZE / 8;
 
 // Maximum size of each champion
 const size_t CHAMP_MAX_SIZE = MEM_SIZE / 6;

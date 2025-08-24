@@ -11,6 +11,7 @@ extern const int MAX_CHECKS;
 extern const int NBR_LIVE;
 extern const int CYCLE_DELTA;
 extern const size_t MEM_SIZE;
+extern const size_t IDX_MODE;
 extern const size_t CHAMP_MAX_SIZE;
 
 #endif
