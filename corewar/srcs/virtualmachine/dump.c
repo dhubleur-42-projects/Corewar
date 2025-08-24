@@ -57,7 +57,18 @@ void dump_processes(const virtualmachine_t *vm, int fd) {
 	t_list *processes = vm->processes;
 	while (processes != NULL) {
 		process_t *process = (process_t *)processes->content;
-		ft_dprintf(fd, "Process %d: PC=0x%s%x, Carry=%d Registers:\n", process->id, get_hexa_zero_padding(process->pc, 4), process->pc, process->carry);
+		champion_t *champion = NULL;
+		for (int i = 0; i < vm->number_of_champions; i++) {
+			if (vm->champions[i].number == process->owner) {
+				champion = &vm->champions[i];
+				break;
+			}
+		}
+		if (champion == NULL) {
+			ft_dprintf(fd, "Error: Champion for process %d not found.\n", process->id);
+			continue;
+		}
+		ft_dprintf(fd, "Process %d: CHAMPION=%s(%i) PC=0x%s%x, Carry=%d Registers:\n", process->id, champion->name, champion->number,get_hexa_zero_padding(process->pc, 4), process->pc, process->carry);
 		for (int i = 0; i < REG_NUMBER; i++) {
 			ft_dprintf(fd, "  R%d: ", i + 1);
 			for (int j = 0; j < REG_SIZE; j++) {
