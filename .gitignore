@@ -2,3 +2,4 @@ asm/asm
 corewar/corewar
 build/
 *.cor
+!champions/*.cor
