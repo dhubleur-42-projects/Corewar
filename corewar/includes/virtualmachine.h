@@ -54,6 +54,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args);
 void free_virtualmachine(virtualmachine_t *vm);
 void dump_memory(const virtualmachine_t *vm, int fd);
 void dump_processes(const virtualmachine_t *vm, int fd);
+void dump_champions(virtualmachine_t *vm, int fd);
 
 // Return true and fill instr if the given process is on a valid instruction
 // Return false if the process is not on a valid instruction
@@ -76,5 +77,6 @@ void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t
 bool is_simulation_finished(virtualmachine_t *vm, arguments_t *args);
 bool do_cycle(virtualmachine_t *vm);
 void free_process(void *ptr);
+void detect_winner(virtualmachine_t *vm);
 
 #endif

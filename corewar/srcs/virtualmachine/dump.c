@@ -79,3 +79,10 @@ void dump_processes(const virtualmachine_t *vm, int fd) {
 		processes = processes->next;
 	}
 }
+
+void dump_champions(virtualmachine_t *vm, int fd) {
+	for (int i = 0; i < vm->number_of_champions; i++) {
+		champion_t *champion = &vm->champions[i];
+		ft_dprintf(fd, "Champion %d: %s | Last live at: %d\n", champion->number, champion->name, champion->last_live);
+	}
+}

@@ -9,6 +9,7 @@ SRCS		= 	\
 					init.c \
 					dump.c \
 					cycle.c \
+					end.c \
 				)
 
 LIBFT_FOLDER	=	../libft
