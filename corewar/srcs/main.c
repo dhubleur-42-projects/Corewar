@@ -1,8 +1,13 @@
 #include "arguments.h"
 #include "virtualmachine.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 int main(int argc, char **argv)
 {
+	srand(time(NULL));
+
 	arguments_t args;
 
 	if (!parse_arguments(argc, argv, &args)) {

@@ -16,7 +16,13 @@ void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t
 	(void)vm;
 	(void)process;
 	(void)instr;
-	result->has_jumped = false;
+	int rand_val = rand() % 3 + 1;
+	if (rand_val == 1) {
+		result->has_jumped = true;
+		process->pc = rand() % MEM_SIZE;
+	} else {
+		result->has_jumped = false;
+	}
 }
 
 
