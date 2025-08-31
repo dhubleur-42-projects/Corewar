@@ -39,6 +39,7 @@ bool init_virtualmachine(virtualmachine_t *vm) {
 	vm->cycle_to_die = CYCLE_TO_DIE;
 	vm->last_check_cycle = 0;
 	vm->checks_since_decrease = 0;
+	vm->lives_since_check = 0;
 
 	vm->memory = malloc(sizeof(memory_t));
 	if (vm->memory == NULL) {
@@ -113,6 +114,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 		}
 		champion->number = champion_arg->number;
 		ft_strcpy(champion->name, header->prog_name);
+		champion->last_live = -1;
 
 		int start_address = i * space_between_entries;
 		size_t idx = 0;

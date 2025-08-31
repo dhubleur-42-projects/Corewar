@@ -45,6 +45,7 @@ typedef struct {
 	int cycle_to_die;
 	int last_check_cycle;
 	int checks_since_decrease;
+	int lives_since_check;
 } virtualmachine_t;
 
 bool init_virtualmachine(virtualmachine_t *vm);

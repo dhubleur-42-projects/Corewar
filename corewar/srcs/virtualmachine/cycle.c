@@ -22,6 +22,10 @@ void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t
 		process->pc = rand() % MEM_SIZE;
 	} else {
 		result->has_jumped = false;
+		if (rand_val == 2) {
+			result->has_executed_live = true;
+			result->live_parameter = process->owner;
+		}
 	}
 }
 
@@ -50,7 +54,8 @@ void progress_process(process_t *process) {
 
 bool do_process_read(virtualmachine_t *vm, process_t *process) {
 	if (process->current_instruction == NULL) {
-		ft_dprintf(1, "Process %d, cycle %d: read instr\n", process->id, vm->cycle);
+		// DEBUG
+		ft_dprintf(2, "Process %d, cycle %d: read instr\n", process->id, vm->cycle);
 		process->current_instruction = malloc(sizeof(instruction_t));
 		if (process->current_instruction == NULL) {
 			ft_dprintf(2, "Error: Memory allocation failed.\n");
@@ -59,7 +64,8 @@ bool do_process_read(virtualmachine_t *vm, process_t *process) {
 		if (!is_valid_instruction(vm, process, process->current_instruction)) {
 			progress_process(process);
 		}
-		ft_dprintf(1, "\t <bytes_used: %d, cycles: %d>\n", process->current_instruction->bytes_used, process->current_instruction->cycles);
+		// DEBUG
+		ft_dprintf(2, "\t <bytes_used: %d, cycles: %d>\n", process->current_instruction->bytes_used, process->current_instruction->cycles);
 	}
 	return true;
 }
@@ -69,12 +75,14 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 		if (process->current_instruction->cycles > 0) {
 			process->current_instruction->cycles -= 1;
 		} else {
-			ft_dprintf(1, "Process %d, cycle %d: execute instr\n", process->id, vm->cycle);
+			// DEBUG
+			ft_dprintf(2, "Process %d, cycle %d: execute instr\n", process->id, vm->cycle);
 
 			instruction_result_t result;
 			execute_instruction(vm, process, process->current_instruction, &result);
 
-			ft_dprintf(1, "\t <has_jumped: %d>\n", result.has_jumped);
+			// DEBUG
+			ft_dprintf(2, "\t <has_jumped: %d, has_executed_live: %d, live_parameter: %d>\n", result.has_jumped, result.has_executed_live, result.has_executed_live ? result.live_parameter : -1);
 
 			if (result.has_jumped) {
 				clean_instruction(process);
@@ -82,9 +90,21 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 				progress_process(process);
 			}
 
-			ft_dprintf(1, "\t PC now at %d\n", process->pc);
+			if (result.has_executed_live) {
+				vm->lives_since_check += 1;
+				champion_t *champion = NULL;
+				for (int i = 0; i < vm->number_of_champions; i++) {
+					if (vm->champions[i].number == result.live_parameter) {
+						vm->champions[i].last_live = vm->cycle;
+						champion = &vm->champions[i];
+						break;
+					}
+				}
+				ft_dprintf(1, "Champion %d (%s) has been declared alive by process %d\n", result.live_parameter, champion != NULL ? champion->name : "incorrect", process->id);
+			}
 
-			//TODO handle live
+			// DEBUG
+			ft_dprintf(1, "\t PC now at %d\n", process->pc);
 		}
 	}
 	return true;

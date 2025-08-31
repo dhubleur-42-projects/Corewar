@@ -18,6 +18,7 @@ typedef struct
 typedef struct {
 	int number;
 	char name[PROG_NAME_LENGTH + 1];
+	int last_live;
 } champion_t;
 
 #endif
