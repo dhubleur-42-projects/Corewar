@@ -29,8 +29,16 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	dump_memory(&vm, 1);
-	dump_processes(&vm, 1);
+	while (!is_simulation_finished(&vm, &args)) {
+		if(!do_cycle(&vm)) {
+			free_virtualmachine(&vm);
+			free_arguments(&args);
+			return 1;
+		}
+	}
+
+	// dump_memory(&vm, 1);
+	// dump_processes(&vm, 1);
 
 	free_virtualmachine(&vm);
 	free_arguments(&args);

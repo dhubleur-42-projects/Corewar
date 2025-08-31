@@ -9,6 +9,9 @@ void free_process(void *ptr) {
 			}
 			free(process->regs);
 		}
+		if (process->current_instruction != NULL) {
+			free(process->current_instruction);
+		}
 		free(process);
 	}
 }
@@ -129,6 +132,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 		process->owner = champion_arg->number;
 		process->pc = start_address;
 		process->carry = 0;
+		process->current_instruction = NULL;
 		process->regs = malloc(REG_NUMBER * sizeof(uint8_t *));
 		if (process->regs == NULL) {
 			ft_dprintf(2, "Error: Memory allocation failed.\n");
@@ -157,7 +161,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 			free_process(process);
 			return false;
 		}
-		ft_lstadd_back(&vm->processes, new_process);
+		ft_lstadd_front(&vm->processes, new_process);
 	}
 	return true;
 }

@@ -8,6 +8,7 @@ SRCS		= 	\
 				$(addprefix virtualmachine/, \
 					init.c \
 					dump.c \
+					cycle.c \
 				)
 
 LIBFT_FOLDER	=	../libft
@@ -18,7 +19,7 @@ OBJS		=	$(addprefix build/, $(_OBJS))
 OBJS_DEPEND	=	${OBJS:.o=.d}
 
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 INCLUDE		=	-I includes/ -I $(LIBFT_FOLDER)
 
 all		:	$(NAME)

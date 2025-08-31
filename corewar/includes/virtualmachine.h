@@ -22,11 +22,18 @@ typedef struct {
 } memory_t;
 
 typedef struct {
+    int cycles;
+    size_t bytes_used;
+    // Anything that is necessary to execute the instruction later (defined by B, opaque for A)
+} instruction_t;
+
+typedef struct {
 	int id;
 	int owner;
 	size_t pc;
 	uint8_t **regs;
 	int carry;
+	instruction_t *current_instruction;
 } process_t;
 
 typedef struct {
@@ -45,5 +52,26 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args);
 void free_virtualmachine(virtualmachine_t *vm);
 void dump_memory(const virtualmachine_t *vm, int fd);
 void dump_processes(const virtualmachine_t *vm, int fd);
+
+// Return true and fill instr if the given process is on a valid instruction
+// Return false if the process is not on a valid instruction
+// instr->cycles is filled with the cycle count of the valid instruction
+// instr->bytes_uses is filled with the number of bytes of the valid instruction
+bool is_valid_instruction(virtualmachine_t *vm, process_t *process, instruction_t *instr);
+
+typedef struct {
+    bool has_executed_live;
+    int live_parameter;
+    bool has_jumped;
+} instruction_result_t;
+
+// Execute the instruction inst for the given process
+// Fill `has_executed_live`=true if it was a live instruction
+// and in this case fill the `live_parameter` with the parameter used in the instruction
+// Fill the has_jumped variable to know if we need to move the PC
+void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t *instr, instruction_result_t *result);
+
+bool is_simulation_finished(virtualmachine_t *vm, arguments_t *args);
+bool do_cycle(virtualmachine_t *vm);
 
 #endif
