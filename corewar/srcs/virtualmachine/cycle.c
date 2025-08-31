@@ -1,11 +1,13 @@
 #include "virtualmachine.h"
 
+#include <stdlib.h>
+
 //TMP
 bool is_valid_instruction(virtualmachine_t *vm, process_t *process, instruction_t *instr) {
 	(void)vm;
 	(void)instr;
-	process->current_instruction->cycles = 10;
-	process->current_instruction->bytes_used = 5;
+	process->current_instruction->cycles = rand() % 11 + 10;
+	process->current_instruction->bytes_used = rand() % 5 + 5;
 	return true;
 }
 
@@ -51,6 +53,7 @@ bool do_process_read(virtualmachine_t *vm, process_t *process) {
 		if (!is_valid_instruction(vm, process, process->current_instruction)) {
 			progress_process(process);
 		}
+		ft_dprintf(1, "\t <bytes_used: %d, cycles: %d>\n", process->current_instruction->bytes_used, process->current_instruction->cycles);
 	}
 	return true;
 }
@@ -65,11 +68,15 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 			instruction_result_t result;
 			execute_instruction(vm, process, process->current_instruction, &result);
 
+			ft_dprintf(1, "\t <has_jumped: %d>\n", result.has_jumped);
+
 			if (result.has_jumped) {
 				clean_instruction(process);
 			} else {
 				progress_process(process);
 			}
+
+			ft_dprintf(1, "\t PC now at %d\n", process->pc);
 
 			//TODO handle live
 		}
