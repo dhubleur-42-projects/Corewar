@@ -34,6 +34,7 @@ typedef struct {
 	uint8_t **regs;
 	int carry;
 	instruction_t *current_instruction;
+	bool declared_alive;
 } process_t;
 
 typedef struct {
@@ -74,5 +75,6 @@ void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t
 
 bool is_simulation_finished(virtualmachine_t *vm, arguments_t *args);
 bool do_cycle(virtualmachine_t *vm);
+void free_process(void *ptr);
 
 #endif

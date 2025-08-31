@@ -135,6 +135,7 @@ bool load_champions(virtualmachine_t *vm, arguments_t *args) {
 		process->pc = start_address;
 		process->carry = 0;
 		process->current_instruction = NULL;
+		process->declared_alive = false;
 		process->regs = malloc(REG_NUMBER * sizeof(uint8_t *));
 		if (process->regs == NULL) {
 			ft_dprintf(2, "Error: Memory allocation failed.\n");

@@ -91,6 +91,7 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 			}
 
 			if (result.has_executed_live) {
+				process->declared_alive = true;
 				vm->lives_since_check += 1;
 				champion_t *champion = NULL;
 				for (int i = 0; i < vm->number_of_champions; i++) {
@@ -108,6 +109,23 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 		}
 	}
 	return true;
+}
+
+void reduce_cycle_to_die(virtualmachine_t *vm) {
+	vm->cycle_to_die -= CYCLE_DELTA;
+	if (vm->cycle_to_die < 0) {
+		vm->cycle_to_die = 0;
+	}
+	vm->checks_since_decrease = 0;
+
+	// DEBUG
+	ft_dprintf(1, "Cycle to die reduced: %d\n", vm->cycle_to_die);
+}
+
+bool remove_if(void *element, void *data) {
+	process_t *process = (process_t *)element;
+	int id = *((int *)data);
+	return process->id == id;
 }
 
 bool do_cycle(virtualmachine_t *vm) {
@@ -128,7 +146,30 @@ bool do_cycle(virtualmachine_t *vm) {
 		current_process = current_process->next;
 	}
 
-	// TODO: checks
+	if (vm->cycle - vm->last_check_cycle == vm->cycle_to_die) {
+		ft_dprintf(1, "Performing check at cycle %d\n", vm->cycle);
+		
+		current_process = vm->processes;
+		while (current_process != NULL) {
+			process_t *process = (process_t *)current_process->content;
+			if (!process->declared_alive) {
+				ft_dprintf(1, "Process %d hasn't been reported alive in the last %d cycles\n", process->id, vm->cycle_to_die);
+				current_process = current_process->next;
+				int id = process->id;
+				ft_lstremove_if(&vm->processes, remove_if, &id, free_process);
+				continue;
+			}
+			process->declared_alive = false;
+			current_process = current_process->next;
+		}
+
+		vm->checks_since_decrease += 1;
+		if (vm->lives_since_check >= NBR_LIVE || vm->checks_since_decrease == MAX_CHECKS) {
+			reduce_cycle_to_die(vm);
+		}
+		vm->lives_since_check = 0;
+		vm->last_check_cycle = vm->cycle;
+	}
 
 	vm->cycle += 1;
 	return true;
