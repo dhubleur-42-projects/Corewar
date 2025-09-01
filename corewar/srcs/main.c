@@ -44,11 +44,14 @@ int main(int argc, char **argv)
 
 	ft_dprintf(1, "------ END -----\n");
 
-	// dump_memory(&vm, 1);
-	// dump_processes(&vm, 1);
-	dump_champions(&vm, 1);
+	if (vm.cycle == args.dump_cycle) {
+		dump_memory(&vm, 1);
+		dump_processes(&vm, 1);
+	} else {
+		dump_champions(&vm, 1);
+		detect_winner(&vm);
+	}
 
-	detect_winner(&vm);
 
 	free_virtualmachine(&vm);
 	free_arguments(&args);
