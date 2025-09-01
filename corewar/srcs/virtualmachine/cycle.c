@@ -25,6 +25,8 @@ void execute_instruction(virtualmachine_t *vm, process_t *process, instruction_t
 		if (rand_val == 2) {
 			result->has_executed_live = true;
 			result->live_parameter = process->owner;
+		} else {
+			result->has_executed_live = false;
 		}
 	}
 }
@@ -72,7 +74,7 @@ bool do_process_read(virtualmachine_t *vm, process_t *process) {
 
 bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 	if (process->current_instruction != NULL) {
-		if (process->current_instruction->cycles > 0) {
+		if (process->current_instruction->cycles > 1) {
 			process->current_instruction->cycles -= 1;
 		} else {
 			// DEBUG
