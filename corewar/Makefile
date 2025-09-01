@@ -23,7 +23,13 @@ CC			=	clang
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 INCLUDE		=	-I includes/ -I $(LIBFT_FOLDER)
 
+ifeq (debug, $(filter debug,$(MAKECMDGOALS)))
+	CFLAGS	+= -D DEBUG
+endif
+
 all		:	$(NAME)
+
+debug	:	all
 
 build/%.o	:	srcs/%.c
 	@if [ ! -d $(dir $@) ]; then\

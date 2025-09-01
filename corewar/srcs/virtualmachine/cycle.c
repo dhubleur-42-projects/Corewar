@@ -56,8 +56,9 @@ void progress_process(process_t *process) {
 
 bool do_process_read(virtualmachine_t *vm, process_t *process) {
 	if (process->current_instruction == NULL) {
-		// DEBUG
-		ft_dprintf(2, "Process %d, cycle %d: read instr\n", process->id, vm->cycle);
+		#ifdef DEBUG
+			ft_dprintf(2, "Process %d, cycle %d: read instr\n", process->id, vm->cycle);
+		#endif
 		process->current_instruction = malloc(sizeof(instruction_t));
 		if (process->current_instruction == NULL) {
 			ft_dprintf(2, "Error: Memory allocation failed.\n");
@@ -66,8 +67,9 @@ bool do_process_read(virtualmachine_t *vm, process_t *process) {
 		if (!is_valid_instruction(vm, process, process->current_instruction)) {
 			progress_process(process);
 		}
-		// DEBUG
-		ft_dprintf(2, "\t <bytes_used: %d, cycles: %d>\n", process->current_instruction->bytes_used, process->current_instruction->cycles);
+		#ifdef DEBUG
+			ft_dprintf(2, "\t <bytes_used: %d, cycles: %d>\n", process->current_instruction->bytes_used, process->current_instruction->cycles);
+		#endif
 	}
 	return true;
 }
@@ -79,14 +81,16 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 		} 
 		
 		if (process->current_instruction->cycles == 0) {
-			// DEBUG
-			ft_dprintf(2, "Process %d, cycle %d: execute instr\n", process->id, vm->cycle);
+			#ifdef DEBUG
+				ft_dprintf(2, "Process %d, cycle %d: execute instr\n", process->id, vm->cycle);
+			#endif
 
 			instruction_result_t result;
 			execute_instruction(vm, process, process->current_instruction, &result);
 
-			// DEBUG
-			ft_dprintf(2, "\t <has_jumped: %d, has_executed_live: %d, live_parameter: %d>\n", result.has_jumped, result.has_executed_live, result.has_executed_live ? result.live_parameter : -1);
+			#ifdef DEBUG
+				ft_dprintf(2, "\t <has_jumped: %d, has_executed_live: %d, live_parameter: %d>\n", result.has_jumped, result.has_executed_live, result.has_executed_live ? result.live_parameter : -1);
+			#endif
 
 			if (result.has_jumped) {
 				clean_instruction(process);
@@ -105,11 +109,12 @@ bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 						break;
 					}
 				}
-				ft_dprintf(1, "Champion %d (%s) has been declared alive by process %d\n", result.live_parameter, champion != NULL ? champion->name : "incorrect", process->id);
+				ft_dprintf(1, "Cycle %d | Champion %d (%s) has been declared alive by process %d\n", vm->cycle, result.live_parameter, champion != NULL ? champion->name : "incorrect", process->id);
 			}
 
-			// DEBUG
-			ft_dprintf(1, "\t PC now at %d\n", process->pc);
+			#ifdef DEBUG
+				ft_dprintf(1, "\t PC now at %d\n", process->pc);
+			#endif
 		}
 	}
 	return true;
@@ -122,8 +127,9 @@ void reduce_cycle_to_die(virtualmachine_t *vm) {
 	}
 	vm->checks_since_decrease = 0;
 
-	// DEBUG
-	ft_dprintf(1, "Cycle to die reduced: %d\n", vm->cycle_to_die);
+	#ifdef DEBUG
+		ft_dprintf(1, "Cycle to die reduced: %d\n", vm->cycle_to_die);
+	#endif
 }
 
 bool remove_if(void *element, void *data) {
@@ -151,13 +157,15 @@ bool do_cycle(virtualmachine_t *vm) {
 	}
 
 	if (vm->cycle - vm->last_check_cycle == vm->cycle_to_die) {
-		ft_dprintf(1, "Performing check at cycle %d\n", vm->cycle);
+		#ifdef DEBUG
+			ft_dprintf(1, "Performing check at cycle %d\n", vm->cycle);
+		#endif
 		
 		current_process = vm->processes;
 		while (current_process != NULL) {
 			process_t *process = (process_t *)current_process->content;
 			if (!process->declared_alive) {
-				ft_dprintf(1, "Process %d hasn't been reported alive in the last %d cycles\n", process->id, vm->cycle_to_die);
+				ft_dprintf(1, "Cycle %d | Process %d hasn't been reported alive in the last %d cycles\n", vm->cycle, process->id, vm->cycle_to_die);
 				current_process = current_process->next;
 				int id = process->id;
 				ft_lstremove_if(&vm->processes, remove_if, &id, free_process);
