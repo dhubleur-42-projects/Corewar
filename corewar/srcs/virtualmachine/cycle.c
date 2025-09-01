@@ -74,9 +74,11 @@ bool do_process_read(virtualmachine_t *vm, process_t *process) {
 
 bool do_process_exec(virtualmachine_t *vm, process_t *process) {
 	if (process->current_instruction != NULL) {
-		if (process->current_instruction->cycles > 1) {
+		if (process->current_instruction->cycles > 0) {
 			process->current_instruction->cycles -= 1;
-		} else {
+		} 
+		
+		if (process->current_instruction->cycles == 0) {
 			// DEBUG
 			ft_dprintf(2, "Process %d, cycle %d: execute instr\n", process->id, vm->cycle);
 
