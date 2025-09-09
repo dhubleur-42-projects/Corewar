@@ -39,4 +39,6 @@ fclean	:	clean
 re		:	fclean
 			make ${NAME}
 
+FORCE:
+
 .PHONY	:	all clean fclean re
