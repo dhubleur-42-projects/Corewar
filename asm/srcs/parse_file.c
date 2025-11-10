@@ -1,10 +1,13 @@
-#include <stdio.h>
+#include <fcntl.h>
 #include <stdbool.h>
 
 #include "corewar.h"
 #include "exit_message.h"
 #include "exit_status.h"
 #include "libft.h"
+#include "safe_alloc.h"
+#include "safe_exit.h"
+#include "safe_open.h"
 #include "utils.h"
 
 #include "parse_file.h"
@@ -28,7 +31,7 @@ void parse_file(char const *champion_file_name)
 	t_header header;
 	t_file_tracker file_tracker;
 	
-	file_tracker.fd = try_open(champion_file_name);
+	file_tracker.fd = safe_open(champion_file_name, O_RDONLY, 0);
 	parse_header(&file_tracker, &header);
 }
 
@@ -50,7 +53,7 @@ static bool parse_header(t_file_tracker *file_tracker, t_header *header_out)
 
 static bool seek_to_next_line(t_file_tracker *file_tracker)
 {
-	file_tracker->cur_line = get_next_line(file_tracker->fd);;
+	file_tracker->cur_line = safeize_malloc(get_next_line(file_tracker->fd));
 	return file_tracker->cur_line != NULL;
 }
 
@@ -58,8 +61,7 @@ static void clean_line(char const *line, char *cleaned_line)
 {
 	char *tmp_line;
 
-	tmp_line = ft_strtrim(line, " \t\n");
-	assert(tmp_line != NULL, EXIT_STATUS_MEMORY, EXIT_MESSAGE_MEMORY_ALLOCATION);
+	tmp_line = safeize_malloc(ft_strtrim(line, " \t\n"));
 	for (char *cur_ptr = tmp_line; *cur_ptr; cur_ptr++)
 	{
 		if (*cur_ptr == '#')
@@ -69,7 +71,7 @@ static void clean_line(char const *line, char *cleaned_line)
 		}
 	}
 	ft_strcpy(cleaned_line, tmp_line);
-	free(tmp_line);
+	safe_free(tmp_line);
 }
 
 static void parse_header_line(char const *line, t_header *header_out)
@@ -85,22 +87,20 @@ static void parse_header_line(char const *line, t_header *header_out)
 	{
 		assert(header_out->name == NULL, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_DUPLICATE_NAME);
 		assert(ft_strlen(value_ptr) < PROG_NAME_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_NAME_TOO_LONG);
-		header_out->name = ft_strdup(value_ptr + 1 /* skipping first '"' */);
-		assert(header_out->name != NULL, EXIT_STATUS_MEMORY, EXIT_MESSAGE_MEMORY_ALLOCATION);
+		header_out->name = safeize_malloc(ft_strdup(value_ptr + 1 /* skipping first '"' */));
 		header_out->name[ft_strlen(header_out->name) - 1] = 0;
 	}
 	else if (ft_strncmp(line, ".comment", sizeof(".comment") - 1) == 0)
 	{
 		assert(header_out->comment == NULL, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_DUPLICATE_COMMENT);
 		assert(ft_strlen(value_ptr) < COMMENT_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_COMMENT_TOO_LONG);
-		header_out->comment = ft_strdup(value_ptr + 1 /* skipping first '"' */);
-		assert(header_out->comment != NULL, EXIT_STATUS_MEMORY, EXIT_MESSAGE_MEMORY_ALLOCATION);
+		header_out->comment = safeize_malloc(ft_strdup(value_ptr + 1 /* skipping first '"' */));
 		header_out->comment[ft_strlen(header_out->comment) - 1] = 0;
 	}
 	else
 	{
 		ft_putstr_fd(EXIT_MESSAGE_PARSING_HEADER_UNKNOWN_INSTRUCTION, 1);
-		exit(EXIT_STATUS_PARSING_HEADER);
+		safe_exit(EXIT_STATUS_PARSING_HEADER);
 	}
 }
 

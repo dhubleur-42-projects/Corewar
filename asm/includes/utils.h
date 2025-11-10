@@ -7,7 +7,6 @@
 # define STR2(X) #X
 
 bool strend_with(char const *str, char const *suffix);
-int try_open(char const *filename);
 void assert(bool condition, int exit_status, char const *err_msg);
 void die(char const *err, int status);
 

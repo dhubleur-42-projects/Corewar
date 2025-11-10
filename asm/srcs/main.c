@@ -7,6 +7,7 @@
 #include "exit_status.h"
 #include "libft.h"
 #include "parse_file.h"
+#include "safe_exit.h"
 #include "utils.h"
 
 static void parse_args(int ac, char **av, char const **champion_file_name);
@@ -39,7 +40,7 @@ static void parse_args(int ac, char **av, char const **champion_file_name)
 static void die_usage()
 {
 	print_usage();
-	exit(EXIT_STATUS_USAGE);
+	safe_exit(EXIT_STATUS_USAGE);
 }
 
 static void print_usage()

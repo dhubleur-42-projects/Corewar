@@ -3,6 +3,9 @@ NAME		=	asm
 SRCS		= 	\
 				main.c \
 				parse_file.c \
+				safe_alloc.c \
+				safe_exit.c \
+				safe_open.c \
 				utils.c
 
 LIBFT_FOLDER	=	../libft
