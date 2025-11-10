@@ -20,11 +20,15 @@ static void die_usage();
 static void print_usage();
 static void die(char const *err, int status);
 
+void parse_file(char const *champion_file_name);
+
 int main(int ac, char **av)
 {
 	char const *champion_file_name;
 
 	parse_args(ac, av, &champion_file_name);
+	parse_file(champion_file_name);
+	//TEMP TODO compile + write to a file
 }
 
 static void parse_args(int ac, char **av, char const **champion_file_name)

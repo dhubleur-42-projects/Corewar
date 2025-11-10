@@ -2,6 +2,8 @@ NAME		=	asm
 
 SRCS		= 	\
 				main.c \
+				parse_file.c \
+				utils.c
 
 LIBFT_FOLDER	=	../libft
 LIBFT		=	$(LIBFT_FOLDER)/libft.a
