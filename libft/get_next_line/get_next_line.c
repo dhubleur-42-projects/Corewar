@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:12:01 by dhubleur          #+#    #+#             */
-/*   Updated: 2025/11/10 15:49:27 by jmaia            ###   ###               */
+/*   Updated: 2025/11/10 15:49:58 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ char	*get_line(char *storage_buffer)
 	char	*line;
 
 	i = 0;
-	if (!storage_buffer[i])
-		return (NULL);
 	while (storage_buffer[i] && storage_buffer[i] != '\n')
 		i++;
 	line = (char *)malloc(sizeof(char) * (i + 2));
