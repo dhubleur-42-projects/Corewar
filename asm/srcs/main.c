@@ -14,7 +14,7 @@
 
 char *PROG_NAME = NULL;
 
-static void parse_args(int ac, char **av);
+static void parse_args(int ac, char **av, char const **champion_file_name);
 static bool strend_with(char const *str, char const *suffix);
 static void die_usage();
 static void print_usage();
@@ -22,10 +22,12 @@ static void die(char const *err, int status);
 
 int main(int ac, char **av)
 {
-	parse_args(ac, av);
+	char const *champion_file_name;
+
+	parse_args(ac, av, &champion_file_name);
 }
 
-static void parse_args(int ac, char **av)
+static void parse_args(int ac, char **av, char const **champion_file_name)
 {
 	PROG_NAME = av[0];
 	if (ac < 2)
@@ -34,6 +36,7 @@ static void parse_args(int ac, char **av)
 		die("Program name must not exceed "STR(FILENAME_MAX_LEN)" characters\n", EXIT_STATUS_USAGE);
 	if (!strend_with(av[1], ".s"))
 		die_usage();
+	*champion_file_name = av[1];
 }
 
 static bool strend_with(char const *str, char const *suffix)
