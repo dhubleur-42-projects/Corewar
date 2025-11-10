@@ -98,10 +98,7 @@ static void parse_header_line(char const *line, t_header *header_out)
 		header_out->comment[ft_strlen(header_out->comment) - 1] = 0;
 	}
 	else
-	{
-		ft_putstr_fd(EXIT_MESSAGE_PARSING_HEADER_UNKNOWN_INSTRUCTION, 1);
-		safe_exit(EXIT_STATUS_PARSING_HEADER);
-	}
+		die(EXIT_MESSAGE_PARSING_HEADER_UNKNOWN_INSTRUCTION, EXIT_STATUS_PARSING_HEADER);
 }
 
 static char const *get_value_ptr(char const *line)
