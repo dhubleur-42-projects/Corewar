@@ -55,6 +55,8 @@ static void parse_header(t_file_tracker *file_tracker, t_header *header_out)
 
 static void seek_to_next_line(t_file_tracker *file_tracker)
 {
+	if (file_tracker->cur_line != NULL)
+		safe_free(file_tracker->cur_line);
 	file_tracker->cur_line = safe_get_next_line(file_tracker->fd);
 }
 
