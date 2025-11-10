@@ -1,0 +1,9 @@
+#ifndef EXIT_STATUS_H
+# define EXIT_STATUS_H
+
+# define EXIT_STATUS_USAGE	1
+# define EXIT_STATUS_MEMORY 2
+# define EXIT_STATUS_PARSING_HEADER 3
+# define EXIT_STATUS_IO 4
+
+#endif
