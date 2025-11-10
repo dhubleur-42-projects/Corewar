@@ -7,6 +7,7 @@
 /* Generic */
 # define EXIT_MESSAGE_MEMORY_ALLOCATION "Memory allocation error occured\n"
 # define EXIT_MESSAGE_OPEN_FILE "An error occured while opening file\n"
+# define EXIT_MESSAGE_READ_FILE "An error occured while reading file\n"
 
 /* Parse args */
 # define EXIT_MESSAGE_PROG_NAME_TOO_LONG "Program name must not exceed "STR(FILENAME_MAX_LEN)" characters\n"
@@ -20,5 +21,6 @@
 # define EXIT_MESSAGE_PARSING_HEADER_NAME_TOO_LONG ".name value too long\n"
 # define EXIT_MESSAGE_PARSING_HEADER_COMMENT_TOO_LONG ".comment value too long\n"
 # define EXIT_MESSAGE_PARSING_HEADER_UNKNOWN_INSTRUCTION "An error occured while parsing header: unknown instruction\n"
+# define EXIT_MESSAGE_PARSING_HEADER_UNCOMPLETE_PARSE ".name and/or .comment not found\n"
 
 #endif

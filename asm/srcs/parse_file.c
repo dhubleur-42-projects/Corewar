@@ -18,8 +18,8 @@ typedef struct s_file_tracker
 	char const *cur_line;
 } t_file_tracker;
 
-static bool parse_header(t_file_tracker *file_tracker, t_header *header_out);
-static bool seek_to_next_line(t_file_tracker *file_tracker);
+static void parse_header(t_file_tracker *file_tracker, t_header *header_out);
+static void seek_to_next_line(t_file_tracker *file_tracker);
 static void clean_line(char const *line, char *cleaned_line);
 static void parse_header_line(char const *line, t_header *header_out);
 static char const *get_value_ptr(char const *line);
@@ -32,10 +32,11 @@ void parse_file(char const *champion_file_name)
 	t_file_tracker file_tracker;
 	
 	file_tracker.fd = safe_open(champion_file_name, O_RDONLY, 0);
+
 	parse_header(&file_tracker, &header);
 }
 
-static bool parse_header(t_file_tracker *file_tracker, t_header *header_out)
+static void parse_header(t_file_tracker *file_tracker, t_header *header_out)
 {
 	char cleaned_line[LINE_MAX_LEN + 1];
 
@@ -43,18 +44,21 @@ static bool parse_header(t_file_tracker *file_tracker, t_header *header_out)
 	header_out->comment = NULL;
 	while (header_out->name == NULL || header_out->comment == NULL)
 	{
-		if (!seek_to_next_line(file_tracker))
-			return false;
+		seek_to_next_line(file_tracker);
+		if (file_tracker->cur_line[0] == '\0' /* end of file */)
+			die(EXIT_MESSAGE_PARSING_HEADER_UNCOMPLETE_PARSE, EXIT_STATUS_PARSING_HEADER);
 		clean_line(file_tracker->cur_line, cleaned_line);
 		parse_header_line(cleaned_line, header_out);
 	}
-	return true;
 }
 
-static bool seek_to_next_line(t_file_tracker *file_tracker)
+static void seek_to_next_line(t_file_tracker *file_tracker)
 {
-	file_tracker->cur_line = safeize_malloc(get_next_line(file_tracker->fd));
-	return file_tracker->cur_line != NULL;
+	file_tracker->cur_line = get_next_line(file_tracker->fd);
+	if (!file_tracker->cur_line)
+		die(EXIT_MESSAGE_READ_FILE, EXIT_STATUS_IO);
+
+	safeize_malloc((void *)file_tracker->cur_line);
 }
 
 static void clean_line(char const *line, char *cleaned_line)
