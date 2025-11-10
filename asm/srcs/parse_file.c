@@ -7,6 +7,7 @@
 #include "libft.h"
 #include "safe_alloc.h"
 #include "safe_exit.h"
+#include "safe_get_next_line.h"
 #include "safe_open.h"
 #include "utils.h"
 
@@ -54,11 +55,7 @@ static void parse_header(t_file_tracker *file_tracker, t_header *header_out)
 
 static void seek_to_next_line(t_file_tracker *file_tracker)
 {
-	file_tracker->cur_line = get_next_line(file_tracker->fd);
-	if (!file_tracker->cur_line)
-		die(EXIT_MESSAGE_READ_FILE, EXIT_STATUS_IO);
-
-	safeize_malloc((void *)file_tracker->cur_line);
+	file_tracker->cur_line = safe_get_next_line(file_tracker->fd);
 }
 
 static void clean_line(char const *line, char *cleaned_line)

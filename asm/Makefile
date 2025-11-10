@@ -5,6 +5,7 @@ SRCS		= 	\
 				parse_file.c \
 				safe_alloc.c \
 				safe_exit.c \
+				safe_get_next_line.c \
 				safe_open.c \
 				utils.c
 
