@@ -16,11 +16,12 @@
 typedef struct s_file_tracker
 {
 	int fd;
-	char const *cur_line;
+	char cur_line[LINE_MAX_LEN + 1];
+	char const *cur_pos_ptr;
 } t_file_tracker;
 
 static void parse_header(t_file_tracker *file_tracker, t_header *header_out);
-static void seek_to_next_line(t_file_tracker *file_tracker);
+static void seek_to_next_cleaned_line(t_file_tracker *file_tracker);
 static void clean_line(char const *line, char *cleaned_line);
 static void parse_header_line(char const *line, t_header *header_out);
 static char const *get_value_ptr(char const *line);
@@ -45,19 +46,25 @@ static void parse_header(t_file_tracker *file_tracker, t_header *header_out)
 	header_out->comment = NULL;
 	while (header_out->name == NULL || header_out->comment == NULL)
 	{
-		seek_to_next_line(file_tracker);
+		seek_to_next_cleaned_line(file_tracker);
 		if (file_tracker->cur_line[0] == '\0' /* end of file */)
 			die(EXIT_MESSAGE_PARSING_HEADER_UNCOMPLETE_PARSE, EXIT_STATUS_PARSING_HEADER);
-		clean_line(file_tracker->cur_line, cleaned_line);
 		parse_header_line(cleaned_line, header_out);
 	}
 }
 
-static void seek_to_next_line(t_file_tracker *file_tracker)
+static void seek_to_next_cleaned_line(t_file_tracker *file_tracker)
 {
-	if (file_tracker->cur_line != NULL)
-		safe_free(file_tracker->cur_line);
-	file_tracker->cur_line = safe_get_next_line(file_tracker->fd);
+	char *new_line = NULL;
+
+	do
+	{
+		safe_free(new_line);
+		new_line = safe_get_next_line(file_tracker->fd);
+		clean_line(new_line, file_tracker->cur_line);
+	} while (new_line[0] != '\0' && file_tracker->cur_line[0] == '\0');
+	file_tracker->cur_pos_ptr = file_tracker->cur_line;
+	safe_free(new_line);
 }
 
 static void clean_line(char const *line, char *cleaned_line)
