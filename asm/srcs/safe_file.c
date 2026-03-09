@@ -3,11 +3,12 @@
 
 #include "libft.h"
 
+#include "enable_debug_message.h"
 #include "exit_message.h"
 #include "exit_status.h"
 #include "safe_exit.h"
 
-#include "safe_open.h"
+#include "safe_file.h"
 
 static void destroy_node_from_value(list_t **lst, int fd, void (*del)(void *));
 static void close_wrapper(void *content);
@@ -60,14 +61,19 @@ void safe_open_append(int fd)
 	if (node == NULL)
 	{
 		close(fd);
-		die(EXIT_MESSAGE_MEMORY_ALLOCATION, EXIT_STATUS_MEMORY);
+		die(EXIT_STATUS_MEMORY, EXIT_MESSAGE_MEMORY_ALLOCATION);
 	}
 	ft_lstadd_back(&open_lst, node);
 }
 
 void safe_close_all(void)
 {
+#ifdef DEBUG_SAFE_CLOSE_ALL
+	if (open_lst)
+		ft_dprintf(2, "Warning: some files are still open at close_all\n");
+#else
 	ft_lstclear(&open_lst, close_wrapper);
+#endif
 }
 
 static void close_wrapper(void *content)
@@ -75,3 +81,12 @@ static void close_wrapper(void *content)
 	close((int)(long)content);
 }
 
+void safe_write(int fd, const void *buf, size_t count)
+{
+	assert(write(fd, buf, count) != -1, EXIT_STATUS_IO, EXIT_MESSAGE_WRITE_TO_FILE);
+}
+
+void safe_lseek(int fd, off_t offset, int whence)
+{
+	assert(lseek(fd, offset, whence) != -1, EXIT_STATUS_IO, EXIT_MESSAGE_LSEEK);
+}

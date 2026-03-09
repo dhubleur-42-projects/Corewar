@@ -25,11 +25,50 @@ bool strend_with(char const *str, char const *suffix)
 void assert(bool condition, int exit_status, char const *err_msg)
 {
 	if (!condition)
-		die(err_msg, exit_status);
+		die(exit_status, err_msg);
 }
 
-void die(char const *err, int status)
+void die(int status, char const *err)
 {
 	write(2, err, ft_strlen(err));
 	safe_exit(status);
+}
+
+char const *utils_strchr_set(char const *s, char const *set)
+{
+	int	i;
+	int	j;
+
+	if (!s)
+		return (NULL);
+	for (i = 0; s[i]; i++)
+	{
+		for (j = 0; set[j] && s[i] != set[j]; j++)
+			;
+		if (s[i] == set[j])
+			return &s[i];
+	}
+	return (0);
+}
+
+uint32_t ft_htonl(uint32_t hostlong)
+{
+	uint32_t netlong;	
+	uint8_t *host_ptr = (uint8_t *)&hostlong;
+	uint8_t *net_ptr = (uint8_t *)&netlong;
+
+	for (size_t i = 0; i < sizeof(hostlong); i++)
+		net_ptr[i] = host_ptr[sizeof(hostlong) - 1 - i];
+	return netlong;
+}
+
+uint32_t ft_htons(uint16_t hostlong)
+{
+	uint16_t netlong;	
+	uint8_t *host_ptr = (uint8_t *)&hostlong;
+	uint8_t *net_ptr = (uint8_t *)&netlong;
+
+	for (size_t i = 0; i < sizeof(hostlong); i++)
+		net_ptr[i] = host_ptr[sizeof(hostlong) - 1 - i];
+	return netlong;
 }

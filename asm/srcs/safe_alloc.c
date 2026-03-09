@@ -1,5 +1,6 @@
 #include "libft.h"
 
+#include "enable_debug_message.h"
 #include "exit_message.h"
 #include "exit_status.h"
 #include "safe_alloc.h"
@@ -50,7 +51,7 @@ void *safeize_malloc(void *ptr)
 	if (node == NULL)
 	{
 		free(ptr);
-		die(EXIT_MESSAGE_MEMORY_ALLOCATION, EXIT_STATUS_MEMORY);
+		die(EXIT_STATUS_MEMORY, EXIT_MESSAGE_MEMORY_ALLOCATION);
 	}
 	ft_lstadd_back(&allocated_lst, node);
 	return ptr;
@@ -58,5 +59,26 @@ void *safeize_malloc(void *ptr)
 
 void safe_free_all(void)
 {
+#ifdef DEBUG_SAFE_FREE_ALL
+	if (allocated_lst)
+		ft_dprintf(2, "Warning: some memory have not been free at free_all\n");
+#else
 	ft_lstclear(&allocated_lst, free);
+#endif
+}
+
+void safe_lstclear(list_t **lst, void (*del)(void *))
+{
+	list_t	*ptr;
+	list_t	*next;
+
+	ptr = *lst;
+	*lst = NULL;
+	while (ptr != NULL)
+	{
+		next = ptr->next;
+		(*del)(ptr->content);
+		safe_free(ptr);
+		ptr = next;
+	}
 }

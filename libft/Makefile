@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/22 14:17:16 by dhubleur          #+#    #+#              #
-#    Updated: 2021/12/05 20:48:54 by dhubleur         ###   ########.fr        #
+#    Updated: 2026/03/09 21:55:54 by jmaia            ###   ###                #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRCS	+=	$(addprefix str_functions/, \
 						ft_split.c \
 						ft_strchr.c \
 						ft_strdup.c \
+						ft_strequal.c \
 						ft_striteri.c \
 						ft_strjoin.c \
 						ft_strlcat.c \

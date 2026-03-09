@@ -2,7 +2,7 @@
 
 #include "safe_alloc.h"
 #include "safe_get_next_line.h"
-#include "safe_open.h"
+#include "safe_file.h"
 
 #include "safe_exit.h"
 

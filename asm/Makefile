@@ -1,12 +1,13 @@
 NAME		=	asm
 
 SRCS		= 	\
+				compile_to_file.c \
 				main.c \
 				parse_file.c \
 				safe_alloc.c \
 				safe_exit.c \
 				safe_get_next_line.c \
-				safe_open.c \
+				safe_file.c \
 				utils.c
 
 LIBFT_FOLDER	=	../libft
@@ -17,7 +18,7 @@ OBJS		=	$(addprefix build/, $(_OBJS))
 OBJS_DEPEND	=	${OBJS:.o=.d}
 
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g
 INCLUDE		=	-I includes/ -I $(LIBFT_FOLDER)
 
 all		:	$(NAME)
