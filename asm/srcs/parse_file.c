@@ -96,14 +96,14 @@ static void parse_header_line(char const *line, t_header *header_out)
 	if (ft_strncmp(line, ".name", sizeof(".name") - 1) == 0)
 	{
 		assert(header_out->name == NULL, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_DUPLICATE_NAME);
-		assert(ft_strlen(value_ptr) < PROG_NAME_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_NAME_TOO_LONG);
+		assert(ft_strlen(value_ptr) <= PROG_NAME_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_NAME_TOO_LONG);
 		header_out->name = safeize_malloc(ft_strdup(value_ptr + 1 /* skipping first '"' */));
 		header_out->name[ft_strlen(header_out->name) - 1] = 0;
 	}
 	else if (ft_strncmp(line, ".comment", sizeof(".comment") - 1) == 0)
 	{
 		assert(header_out->comment == NULL, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_DUPLICATE_COMMENT);
-		assert(ft_strlen(value_ptr) < COMMENT_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_COMMENT_TOO_LONG);
+		assert(ft_strlen(value_ptr) <= COMMENT_LENGTH + 2 /* surronding '"' */, EXIT_STATUS_PARSING_HEADER, EXIT_MESSAGE_PARSING_HEADER_COMMENT_TOO_LONG);
 		header_out->comment = safeize_malloc(ft_strdup(value_ptr + 1 /* skipping first '"' */));
 		header_out->comment[ft_strlen(header_out->comment) - 1] = 0;
 	}
